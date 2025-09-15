@@ -64,7 +64,10 @@ def task_1():
     df_bellevue['gender'] = df_bellevue['gender'] \
                                 .replace(['h', 'g', '?'], np.nan)
     col_list = df_bellevue.columns.tolist()
-    return df_bellevue[col_list].isna().sum().sort_values().index.tolist()
+    return df_bellevue[col_list].isna() \
+                                .sum() \
+                                .sort_values() \
+                                .index.tolist()
 
     
 """
@@ -81,7 +84,8 @@ Finally, we drop all duplicate values in the year column so we only have one ins
 def task_2():
     df = pd.DataFrame(columns=['year', 'total_admissions'])
     df['year'] = df_bellevue['date_in'].str[:4]
-    df['total_admissions'] = df.groupby('year')['year'].transform('size')
+    df['total_admissions'] = df.groupby('year')['year'] \
+                                .transform('size')
     df = df.drop_duplicates(subset = 'year')
     return df
 
@@ -98,7 +102,8 @@ Finally, we return a series that sets the index to a string value of each unique
 def task_3():
     df_bellevue['gender'] = df_bellevue['gender'] \
                                 .replace(['h', 'g', '?'], np.nan)
-    avg_age_by_gender = df_bellevue.groupby('gender')['age'].mean()
+    avg_age_by_gender = df_bellevue.groupby('gender')['age'] \
+                                    .mean()
     return pd.Series(avg_age_by_gender, 
                         index = df_bellevue['gender'].unique().astype(str))
 
