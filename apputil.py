@@ -43,22 +43,38 @@ def to_binary(num):
         raise ValueError("Input must be a non-negative integer")
     
 
-#use print statements to explain messy data issues
+#Here we import the bellevue csv file using the following url.
 url = 'https://github.com/melaniewalsh/Intro-Cultural-Analytics/raw/master/book/data/bellevue_almshouse_modified.csv'
 
 df_bellevue = pd.read_csv(url)
 
-#return list of all col names, sorted
-#first col is least amount of missing vals, last is most amount
-#remedy gender col first (create only M, F, and NaN gender values)
+"""
+Our first task is to return a list of all column names sorted by least to greatest amount of missing values.
+First, we need to remedy the gender column since we have values other than M (male), F (female), and NaN (missing).
+Then, we can create a list of the column names by using the built-in tolist() function.
+Finally, we return the list sorted (automatically ascending) by the sum of all missing values.
+We use the index and tolist() functions since the return statement would intially return a series, including both the column name and
+ number of missing values while we only need the column name (the index of the series). 
+"""
 def task_1():
     print(df_bellevue['gender'].unique())
     df_bellevue['gender'] = df_bellevue['gender'] \
                                 .replace(['h', 'g', '?'], np.nan)
     col_list = df_bellevue.columns.tolist()
     return df_bellevue[col_list].isna().sum().sort_values().index.tolist()
+
     
-#return df with 2 cols, year for each year and total num of entries (immigrant admins) for each year    
+"""
+Our second task is to create a data frame with 2 columns that store each year within the 
+ bellevue data frame and the number of admissions for each of those years.
+First, we create an empty pandas data frame with the columns, year and total_admissions.
+Next, we use the date_in column from the bellevue data frame to find the year, which is
+ also the first 4 characters of date_in string and set that to the year column in the new data frame.
+Then, we use the groupby function to find the total number of admissions under each year in the
+ data frame, transforming the type to a size to add to the total_admissions column in the new data frame.
+Finally, we drop all duplicate values in the year column so we only have one instance of each year before
+ returning the final data frame including each year and their corresponding admission sums.
+"""
 def task_2():
     df = pd.DataFrame(columns=['year', 'total_admissions'])
     df['year'] = df_bellevue['date_in'].str[:4]
