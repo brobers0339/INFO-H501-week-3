@@ -1,5 +1,6 @@
 import seaborn as sns
 import pandas as pd
+import numpy as np
 
 
 """
@@ -11,14 +12,14 @@ fib(n) = fib(n-1) + fib(n-2) for n > 1
 The function should raise a ValueError if the input is not a non-negative integer, which will account for any invalid inputs.
 """
 
-def fib(n):
+def fibonacci(n):
     if type(n) is int and n >= 0:
         if n == 0:
             return 0
         elif n == 1:
             return 1
         else:
-            return fib(n-1) + fib(n-2)
+            return fibonacci(n-1) + fibonacci(n-2)
     else:
         raise ValueError("Input must be a non-negative integer")
     
@@ -42,3 +43,40 @@ def to_binary(num):
         raise ValueError("Input must be a non-negative integer")
     
 
+#use print statements to explain messy data issues
+url = 'https://github.com/melaniewalsh/Intro-Cultural-Analytics/raw/master/book/data/bellevue_almshouse_modified.csv'
+
+df_bellevue = pd.read_csv(url)
+
+#return list of all col names, sorted
+#first col is least amount of missing vals, last is most amount
+#remedy gender col first (create only M, F, and NaN gender values)
+
+
+def task_1():
+    print(df_bellevue['gender'].unique())
+    df_bellevue['gender'] = df_bellevue['gender'] \
+                                .replace(['h', 'g', '?'], np.nan)
+    col_list = df_bellevue.columns.tolist()
+    return df_bellevue[col_list].isna().sum().sort_values()
+    
+#return df with 2 cols, year for each year and total num of entries (immigrant admins) for each year    
+def task_2():
+    df = pd.DataFrame(columns=['year_in', 'num_admins'])
+    df['year_in'] = df_bellevue['date_in'].str[:4]
+    df['num_admins'] = df.groupby('year_in')['year_in'].transform('size')
+    df = df.drop_duplicates(subset = 'year_in')
+    return df
+
+#return a series with index: gender (for each gender) and values: avg age of indexed gender
+#continuing to use altered gender column from above
+def task_3():
+    df_bellevue['gender'] = df_bellevue['gender'] \
+                                .replace(['h', 'g', '?'], np.nan)
+    avg_age_by_gender = df_bellevue.groupby('gender')['age'].mean()
+    return pd.Series(avg_age_by_gender, 
+                        index = df_bellevue['gender'].unique())
+
+#return a list of the top 5 professions in order of prevalence (most common first)
+def task_4():
+    return df_bellevue['profession'].value_counts()[:5].index.tolist()
