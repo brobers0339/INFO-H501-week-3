@@ -51,20 +51,18 @@ df_bellevue = pd.read_csv(url)
 #return list of all col names, sorted
 #first col is least amount of missing vals, last is most amount
 #remedy gender col first (create only M, F, and NaN gender values)
-
-
 def task_1():
     print(df_bellevue['gender'].unique())
     df_bellevue['gender'] = df_bellevue['gender'] \
                                 .replace(['h', 'g', '?'], np.nan)
     col_list = df_bellevue.columns.tolist()
-    return df_bellevue[col_list].isna().sum().sort_values()
+    return df_bellevue[col_list].isna().sum().sort_values().index.tolist()
     
 #return df with 2 cols, year for each year and total num of entries (immigrant admins) for each year    
 def task_2():
-    df = pd.DataFrame(columns=['year_in', 'num_admins'])
+    df = pd.DataFrame(columns=['year_in', 'total_admissions'])
     df['year_in'] = df_bellevue['date_in'].str[:4]
-    df['num_admins'] = df.groupby('year_in')['year_in'].transform('size')
+    df['total_admissions'] = df.groupby('year_in')['year_in'].transform('size')
     df = df.drop_duplicates(subset = 'year_in')
     return df
 
@@ -75,7 +73,7 @@ def task_3():
                                 .replace(['h', 'g', '?'], np.nan)
     avg_age_by_gender = df_bellevue.groupby('gender')['age'].mean()
     return pd.Series(avg_age_by_gender, 
-                        index = df_bellevue['gender'].unique())
+                        index = df_bellevue['gender'].unique().astype(str))
 
 #return a list of the top 5 professions in order of prevalence (most common first)
 def task_4():
