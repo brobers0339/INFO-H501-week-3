@@ -60,10 +60,10 @@ def task_1():
     
 #return df with 2 cols, year for each year and total num of entries (immigrant admins) for each year    
 def task_2():
-    df = pd.DataFrame(columns=['year_in', 'total_admissions'])
-    df['year_in'] = df_bellevue['date_in'].str[:4]
-    df['total_admissions'] = df.groupby('year_in')['year_in'].transform('size')
-    df = df.drop_duplicates(subset = 'year_in')
+    df = pd.DataFrame(columns=['year', 'total_admissions'])
+    df['year'] = df_bellevue['date_in'].str[:4]
+    df['total_admissions'] = df.groupby('year')['year'].transform('size')
+    df = df.drop_duplicates(subset = 'year')
     return df
 
 #return a series with index: gender (for each gender) and values: avg age of indexed gender
