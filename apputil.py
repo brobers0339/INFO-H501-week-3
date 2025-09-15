@@ -4,14 +4,15 @@ import numpy as np
 
 
 """
-Write a recursive function to compute the nth Fibonacci number (sum of previous two numbers within the series starting with 0 and 1).
-The fib function is defined as follows:
-fib(0) = 0
-fib(1) = 1
-fib(n) = fib(n-1) + fib(n-2) for n > 1
+Our goal is to write a recursive function to compute the nth Fibonacci number, 
+ (sum of previous two numbers within the series starting with 0 and 1).
+Assuming the inputted n number is an integer and greater than or equal to zero,
+ we first check if n is equal to 0 or equal to 1. If so, return the respective number back.
+Otherwise, our function recursively calls upon itself calculating the sum of the
+ previous number (n-1) and number before the previous (n-2) until n is equal to 0 or 1.
+Once n reaches 0 or 1, it returns the calculated fibonacci sum.
 The function should raise a ValueError if the input is not a non-negative integer, which will account for any invalid inputs.
 """
-
 def fibonacci(n):
     if type(n) is int and n >= 0:
         if n == 0:
@@ -24,11 +25,13 @@ def fibonacci(n):
         raise ValueError("Input must be a non-negative integer")
     
 """
-Write a function to convert a non-negative integer to its binary representation as a string.
+Our goal is to write a function to convert a non-negative integer to its binary representation as a string.
 If the number is 0, the function will automatically return 0.
-While the current number is greater than 0, add the remainer of the number when divided by 2 to the binary string and find the new number (which is the current number divided by 2 using the floor division operator (aka the divided number down)).
+While the current number is greater than 0, add the remainer of the number when divided by 2 to the binary string
+ and find the new number (which is the current number divided by 2 using the floor division operator (aka the divided number down)).
 Once the number is 0, return the found converted binary string.
-The function should raise a ValueError if the input is not a non-negative integer, which will account for any invalid inputs.
+The function should raise a ValueError if the input is not a non-negative integer, 
+ which will account for any invalid inputs.
 """
 def to_binary(num):
     binary_string = ""
@@ -82,8 +85,16 @@ def task_2():
     df = df.drop_duplicates(subset = 'year')
     return df
 
-#return a series with index: gender (for each gender) and values: avg age of indexed gender
-#continuing to use altered gender column from above
+"""
+Our third task is to return a series with the index containing each gender from the bellevue data frame
+ and the values showing the average age for that indexed gender.
+First, we must remedy the same issue with the gender column from task one to ensure that
+ there is only M (male), F (female), and NaN (missing) values.
+Then, we find the average age by using the groupby function (for gender then age) and the 
+ mean function to calculate the average age for each gender.
+Finally, we return a series that sets the index to a string value of each unique
+ gender value and the value at each index to the corresponding calculated average age.
+"""
 def task_3():
     df_bellevue['gender'] = df_bellevue['gender'] \
                                 .replace(['h', 'g', '?'], np.nan)
@@ -91,6 +102,13 @@ def task_3():
     return pd.Series(avg_age_by_gender, 
                         index = df_bellevue['gender'].unique().astype(str))
 
-#return a list of the top 5 professions in order of prevalence (most common first)
+"""
+Our fourth (and final) task is to return a list of the top 5 professions in order for most
+ to least prevalent.
+This function uses the value_counts() function to return the first 5 professions
+ sorted by the value_count(which automatically sorts descending by count).
+The index and tolist() function are also used since the value_count function returns a series,
+ so we find the index (the profession name) and just return a list of those values instead.
+"""
 def task_4():
     return df_bellevue['profession'].value_counts()[:5].index.tolist()
